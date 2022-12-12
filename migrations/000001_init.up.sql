@@ -1,5 +1,3 @@
--- +goose Up
--- +goose StatementBegin
 CREATE TABLE "user"
 (
     ID_user    BIGSERIAL PRIMARY KEY,
@@ -36,15 +34,4 @@ CREATE TABLE feed
     ID_news INT REFERENCES news (ID_news),
     ID_user INT REFERENCES "user" (ID_user)
 );
--- +goose StatementEnd
 
--- +goose Down
--- +goose StatementBegin
-DROP TABLE feed;
-
-DROP TABLE news;
-
-DROP TABLE media;
-
-DROP TABLE "user";
--- +goose StatementEnd
