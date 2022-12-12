@@ -1,0 +1,31 @@
+_id: req_77e705c9f5b84d18a1671aaee938c570
+type: Request
+parentId: fld_23446ca4baa44fceb65e0a161d42af54
+modified: 1670876546474
+created: 1670875419537
+url: "{{ _.url }}/users/register"
+name: register
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"login": "kirill",
+    	"email": "kirill@mail.com",
+    	"password": "qwerty",
+    	"name": "Кумма Кирилл Сергеевич"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication: {}
+metaSortKey: -1670875419537
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

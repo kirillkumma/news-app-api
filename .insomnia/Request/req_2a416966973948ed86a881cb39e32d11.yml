@@ -1,0 +1,30 @@
+_id: req_2a416966973948ed86a881cb39e32d11
+type: Request
+parentId: fld_23446ca4baa44fceb65e0a161d42af54
+modified: 1670876913474
+created: 1670876168206
+url: "{{ _.url }}/users/login"
+name: login
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"login": "kirill",
+    	"password": "qwerty"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_ed4be4880318464ba58af123aa43b78d
+authentication: {}
+metaSortKey: -1670876168206
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
