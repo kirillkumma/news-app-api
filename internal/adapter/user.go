@@ -2,7 +2,6 @@ package adapter
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/jackc/pgx/v5"
@@ -44,7 +43,7 @@ func (r *userRepository) GetByLogin(ctx context.Context, login string) (u entity
 		&u.Email,
 	)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if err == pgx.ErrNoRows {
 			err = &dto.AppError{
 				Message: "Пользователь не найден",
 				Code:    dto.ErrCodeNotFound,
@@ -74,7 +73,7 @@ func (r *userRepository) GetByEmail(ctx context.Context, email string) (u entity
 		&u.Email,
 	)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if err == pgx.ErrNoRows {
 			err = &dto.AppError{
 				Message: "Пользователь не найден",
 				Code:    dto.ErrCodeNotFound,

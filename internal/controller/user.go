@@ -64,7 +64,15 @@ func (c *UserController) Login() fiber.Handler {
 	}
 }
 
+func (c *UserController) Logout() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		ctx.ClearCookie("session")
+		return ctx.SendStatus(fiber.StatusNoContent)
+	}
+}
+
 func (c *UserController) RegisterRoutes(r fiber.Router) {
 	r.Post("/register", c.Register())
 	r.Post("/login", c.Login())
+	r.Post("/logout", c.Logout())
 }
