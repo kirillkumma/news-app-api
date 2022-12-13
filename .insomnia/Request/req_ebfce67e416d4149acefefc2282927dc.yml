@@ -1,0 +1,21 @@
+_id: req_ebfce67e416d4149acefefc2282927dc
+type: Request
+parentId: fld_5d651a4f5fca4d6880e7db9648eb2c96
+modified: 1670959503027
+created: 1670959489037
+url: "{{ _.url }}/media/authenticate"
+name: authenticate
+description: ""
+method: POST
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1670959489037
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

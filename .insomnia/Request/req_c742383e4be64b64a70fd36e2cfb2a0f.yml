@@ -1,0 +1,29 @@
+_id: req_c742383e4be64b64a70fd36e2cfb2a0f
+type: Request
+parentId: fld_5d651a4f5fca4d6880e7db9648eb2c96
+modified: 1670959432970
+created: 1670959405408
+url: "{{ _.url }}/media/login"
+name: login
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"registrationNumber": 1234,
+    	"password": "qwerty"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication: {}
+metaSortKey: -1670959405408
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

@@ -1,0 +1,35 @@
+_id: req_a3abb56bbe4b42b7b865340d844d4f37
+type: Request
+parentId: fld_5d651a4f5fca4d6880e7db9648eb2c96
+modified: 1670959259545
+created: 1670959140070
+url: "{{ _.url }}/media/register"
+name: register
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"registrationNumber": 1234,
+    	"name": "ТАСС",
+    	"email": "tass@mail.com",
+    	"editor": {
+    		"firstName": "Ivan",
+    		"lastName": "Ivanov"
+    	},
+    	"password": "qwerty"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication: {}
+metaSortKey: -1670959140070
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
