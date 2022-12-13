@@ -44,6 +44,8 @@ func Run() {
 
 	userUC := usecase.NewUserUseCase(userRepo)
 
+	middleware := controller.NewMiddleware()
+
 	userController := controller.NewUserController(userUC)
 
 	app := fiber.New(fiber.Config{
@@ -82,7 +84,7 @@ func Run() {
 
 	userRouter := router.Group("/users")
 
-	userController.RegisterRoutes(userRouter)
+	userController.RegisterRoutes(userRouter, middleware)
 
 	go func() {
 		err = app.Listen(fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))

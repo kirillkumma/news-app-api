@@ -13,6 +13,7 @@ type (
 	UserUseCase interface {
 		Register(ctx context.Context, p dto.RegisterParams) (entity.User, error)
 		Login(ctx context.Context, p dto.LoginParams) (entity.User, error)
+		GetByID(ctx context.Context, userID int64) (entity.User, error)
 	}
 
 	userUseCase struct {
@@ -73,14 +74,6 @@ func (u *userUseCase) Register(ctx context.Context, p dto.RegisterParams) (user 
 }
 
 func (u *userUseCase) Login(ctx context.Context, p dto.LoginParams) (user entity.User, err error) {
-	defer func() {
-		if err != nil {
-			var appErr *dto.AppError
-			if !errors.As(err, &appErr) {
-				err = fmt.Errorf("UserUseCase - Login: %w", err)
-			}
-		}
-	}()
 
 	user, err = u.userRepo.GetByLogin(ctx, p.Login)
 	if err != nil {
@@ -96,4 +89,16 @@ func (u *userUseCase) Login(ctx context.Context, p dto.LoginParams) (user entity
 	}
 
 	return
+}
+
+func (u *userUseCase) GetByID(ctx context.Context, userID int64) (user entity.User, err error) {
+	defer func() {
+		if err != nil {
+			var appErr *dto.AppError
+			if !errors.As(err, &appErr) {
+				err = fmt.Errorf("UserUseCase - GetByID: %w", err)
+			}
+		}
+	}()
+	return u.userRepo.GetByID(ctx, userID)
 }

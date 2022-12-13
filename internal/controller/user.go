@@ -71,8 +71,22 @@ func (c *UserController) Logout() fiber.Handler {
 	}
 }
 
-func (c *UserController) RegisterRoutes(r fiber.Router) {
+func (c *UserController) Authenticate() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		userID := ctx.Locals(userIDKey).(int64)
+
+		user, err := c.userUC.GetByID(ctx.Context(), userID)
+		if err != nil {
+			return err
+		}
+
+		return ctx.Status(fiber.StatusOK).JSON(newResponse(user))
+	}
+}
+
+func (c *UserController) RegisterRoutes(r fiber.Router, mw *Middleware) {
 	r.Post("/register", c.Register())
 	r.Post("/login", c.Login())
 	r.Post("/logout", c.Logout())
+	r.Post("/authenticate", mw.Auth(), c.Authenticate())
 }

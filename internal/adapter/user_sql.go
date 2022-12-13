@@ -26,4 +26,14 @@ INSERT INTO "user" (Login, Password, FIO_user, Email_user)
 VALUES ($1, $2, $3, $4)
 RETURNING ID_user, Login, Password, FIO_user, Email_user
 `
+
+	queryGetByID = `
+SELECT ID_user,
+       Login,
+       Password,
+       FIO_user,
+       Email_user
+FROM "user"
+WHERE ID_user = $1
+`
 )
