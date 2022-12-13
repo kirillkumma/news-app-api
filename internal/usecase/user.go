@@ -11,9 +11,9 @@ import (
 
 type (
 	UserUseCase interface {
-		Register(ctx context.Context, p dto.RegisterParams) (entity.User, error)
-		Login(ctx context.Context, p dto.LoginParams) (entity.User, error)
-		GetByID(ctx context.Context, userID int64) (entity.User, error)
+		RegisterUser(ctx context.Context, p dto.RegisterUserParams) (entity.User, error)
+		LoginUser(ctx context.Context, p dto.LoginUserParams) (entity.User, error)
+		GetUserByID(ctx context.Context, userID int64) (entity.User, error)
 	}
 
 	userUseCase struct {
@@ -25,12 +25,12 @@ func NewUserUseCase(userRepo adapter.UserRepository) UserUseCase {
 	return &userUseCase{userRepo}
 }
 
-func (u *userUseCase) Register(ctx context.Context, p dto.RegisterParams) (user entity.User, err error) {
+func (u *userUseCase) RegisterUser(ctx context.Context, p dto.RegisterUserParams) (user entity.User, err error) {
 	defer func() {
 		if err != nil {
 			var appErr *dto.AppError
 			if !errors.As(err, &appErr) {
-				err = fmt.Errorf("UserUseCase - Register: %w", err)
+				err = fmt.Errorf("UserUseCase - RegisterUser: %w", err)
 			}
 		}
 	}()
@@ -40,7 +40,7 @@ func (u *userUseCase) Register(ctx context.Context, p dto.RegisterParams) (user 
 		return
 	}
 
-	_, err = u.userRepo.GetByLogin(ctx, p.Login)
+	_, err = u.userRepo.GetUserByLogin(ctx, p.Login)
 	if err == nil {
 		err = &dto.AppError{
 			Message: "Логин уже занят",
@@ -55,7 +55,7 @@ func (u *userUseCase) Register(ctx context.Context, p dto.RegisterParams) (user 
 		}
 	}
 
-	_, err = u.userRepo.GetByEmail(ctx, p.Email)
+	_, err = u.userRepo.GetUserByEmail(ctx, p.Email)
 	if err == nil {
 		err = &dto.AppError{
 			Message: "Email уже занят",
@@ -70,12 +70,20 @@ func (u *userUseCase) Register(ctx context.Context, p dto.RegisterParams) (user 
 		}
 	}
 
-	return u.userRepo.Create(ctx, p)
+	return u.userRepo.CreateUser(ctx, p)
 }
 
-func (u *userUseCase) Login(ctx context.Context, p dto.LoginParams) (user entity.User, err error) {
+func (u *userUseCase) LoginUser(ctx context.Context, p dto.LoginUserParams) (user entity.User, err error) {
+	defer func() {
+		if err != nil {
+			var appErr *dto.AppError
+			if !errors.As(err, &appErr) {
+				err = fmt.Errorf("UserUseCase - LoginUser: %w", err)
+			}
+		}
+	}()
 
-	user, err = u.userRepo.GetByLogin(ctx, p.Login)
+	user, err = u.userRepo.GetUserByLogin(ctx, p.Login)
 	if err != nil {
 		return
 	}
@@ -91,14 +99,14 @@ func (u *userUseCase) Login(ctx context.Context, p dto.LoginParams) (user entity
 	return
 }
 
-func (u *userUseCase) GetByID(ctx context.Context, userID int64) (user entity.User, err error) {
+func (u *userUseCase) GetUserByID(ctx context.Context, userID int64) (user entity.User, err error) {
 	defer func() {
 		if err != nil {
 			var appErr *dto.AppError
 			if !errors.As(err, &appErr) {
-				err = fmt.Errorf("UserUseCase - GetByID: %w", err)
+				err = fmt.Errorf("UserUseCase - GetUserByID: %w", err)
 			}
 		}
 	}()
-	return u.userRepo.GetByID(ctx, userID)
+	return u.userRepo.GetUserByID(ctx, userID)
 }

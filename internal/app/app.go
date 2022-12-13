@@ -19,34 +19,40 @@ import (
 func Run() {
 	log.SetOutput(os.Stdout)
 	log.SetLevel(log.DebugLevel)
+	log.SetFormatter(&log.TextFormatter{
+		FullTimestamp: true,
+	})
 
 	cfg, err := config.Load()
 	if err != nil {
-		log.Fatalln(err.Error())
+		log.Fatal(err.Error())
 	}
 
 	log.Debug("Loaded configuration")
 
 	conn, err := pgx.Connect(context.Background(), cfg.DBURL)
 	if err != nil {
-		log.Fatalln(err.Error())
+		log.Fatal(err.Error())
 	}
 	defer conn.Close(context.Background())
 
 	err = conn.Ping(context.Background())
 	if err != nil {
-		log.Fatalln(err.Error())
+		log.Fatal(err.Error())
 	}
 
 	log.Debug("Connected to PostgreSQL")
 
 	userRepo := adapter.NewUserRepository(conn)
+	mediaRepo := adapter.NewMediaRepository(conn)
 
 	userUC := usecase.NewUserUseCase(userRepo)
+	mediaUC := usecase.NewMediaUseCase(mediaRepo)
 
 	middleware := controller.NewMiddleware()
 
 	userController := controller.NewUserController(userUC)
+	mediaController := controller.NewMediaController(mediaUC)
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler:          controller.ErrHandler,
@@ -77,20 +83,22 @@ func Run() {
 			"method", ctx.Method(),
 		).WithField(
 			"path", ctx.Path(),
-		).Info()
+		).Info("Request")
 		return nil
 	})
 
 	router := app.Group("/api")
 
 	userRouter := router.Group("/users")
+	mediaRouter := router.Group("/media")
 
 	userController.RegisterRoutes(userRouter, middleware)
+	mediaController.RegisterRoutes(mediaRouter, middleware)
 
 	go func() {
 		err = app.Listen(fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))
 		if err != nil {
-			log.Fatalln(err.Error())
+			log.Fatal(err.Error())
 		}
 	}()
 
@@ -104,7 +112,7 @@ func Run() {
 
 	err = app.Shutdown()
 	if err != nil {
-		log.Fatalln(err.Error())
+		log.Fatal(err.Error())
 	}
 
 	log.Debug("Application has been shut down")

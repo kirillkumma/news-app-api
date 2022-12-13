@@ -1,20 +1,20 @@
 package dto
 
 type (
-	RegisterParams struct {
+	RegisterUserParams struct {
 		Login    string `json:"login"`
 		Password string `json:"password"`
 		Name     string `json:"name"`
 		Email    string `json:"email"`
 	}
 
-	LoginParams struct {
+	LoginUserParams struct {
 		Login    string `json:"login"`
 		Password string `json:"password"`
 	}
 )
 
-func (p *RegisterParams) Validate() error {
+func (p *RegisterUserParams) Validate() error {
 	if len(p.Login) > 32 {
 		return &AppError{
 			Message: "Максимальная длина логина - 32 символа",

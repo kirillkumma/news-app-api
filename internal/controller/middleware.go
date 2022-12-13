@@ -7,6 +7,7 @@ import (
 )
 
 const userIDKey = "userID"
+const mediaIDKey = "mediaID"
 
 type Middleware struct {
 }
@@ -15,9 +16,9 @@ func NewMiddleware() *Middleware {
 	return &Middleware{}
 }
 
-func (m *Middleware) Auth() fiber.Handler {
+func (m *Middleware) AuthedUser() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		userIDStr := ctx.Cookies("session")
+		userIDStr := ctx.Cookies(userSessionCookie)
 		if userIDStr == "" {
 			return &dto.AppError{
 				Message: "Для совершения данной операции требуется авторизация",
@@ -31,6 +32,27 @@ func (m *Middleware) Auth() fiber.Handler {
 		}
 
 		ctx.Locals(userIDKey, int64(userID))
+
+		return ctx.Next()
+	}
+}
+
+func (m *Middleware) AuthedMedia() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		mediaIDStr := ctx.Cookies(mediaSessionCookie)
+		if mediaIDStr == "" {
+			return &dto.AppError{
+				Message: "Для совершения данной операции требуется авторизация",
+				Code:    dto.ErrCodeUnauthorized,
+			}
+		}
+
+		mediaID, err := strconv.Atoi(mediaIDStr)
+		if err != nil {
+			return err
+		}
+
+		ctx.Locals(mediaIDKey, int64(mediaID))
 
 		return ctx.Next()
 	}

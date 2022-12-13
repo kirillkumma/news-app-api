@@ -1,19 +1,19 @@
 package adapter
 
 const (
-	queryGetByLogin = `
+	queryGetUserByLogin = `
 SELECT ID_user,
-       Login,
+       LoginUser,
        Password,
        FIO_user,
        Email_user
 FROM "user"
-WHERE Login = $1
+WHERE LoginUser = $1
 `
 
-	queryGetByEmail = `
+	queryGetUserByEmail = `
 SELECT ID_user,
-       Login,
+       LoginUser,
        Password,
        FIO_user,
        Email_user
@@ -21,15 +21,15 @@ FROM "user"
 WHERE Email_user = $1
 `
 
-	queryCreate = `
-INSERT INTO "user" (Login, Password, FIO_user, Email_user)
+	queryCreateUser = `
+INSERT INTO "user" (LoginUser, Password, FIO_user, Email_user)
 VALUES ($1, $2, $3, $4)
-RETURNING ID_user, Login, Password, FIO_user, Email_user
+RETURNING ID_user, LoginUser, Password, FIO_user, Email_user
 `
 
-	queryGetByID = `
+	queryGetUserByID = `
 SELECT ID_user,
-       Login,
+       LoginUser,
        Password,
        FIO_user,
        Email_user
