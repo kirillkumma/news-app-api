@@ -49,7 +49,8 @@ func Run() {
 	userController := controller.NewUserController(userUC)
 
 	app := fiber.New(fiber.Config{
-		ErrorHandler: controller.ErrHandler,
+		ErrorHandler:          controller.ErrHandler,
+		DisableStartupMessage: true,
 	})
 
 	app.Use(encryptcookie.New(encryptcookie.Config{
