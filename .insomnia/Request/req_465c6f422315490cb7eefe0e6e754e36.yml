@@ -1,0 +1,31 @@
+_id: req_465c6f422315490cb7eefe0e6e754e36
+type: Request
+parentId: fld_5d651a4f5fca4d6880e7db9648eb2c96
+modified: 1671312601417
+created: 1671312339505
+url: "{{ _.url }}/media"
+name: get_media_list
+description: ""
+method: GET
+body: {}
+parameters:
+  - id: pair_a85f83157dda4ef0bc4c29fd3f554a99
+    name: limit
+    value: "100"
+    description: ""
+    disabled: false
+  - id: pair_73830feb59b64d749e2fabe825950f48
+    name: offset
+    value: "0"
+    description: ""
+    disabled: false
+headers: []
+authentication: {}
+metaSortKey: -1671312339505
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

@@ -1,0 +1,21 @@
+_id: req_9913003876034b1984f4559839da43ad
+type: Request
+parentId: fld_5d651a4f5fca4d6880e7db9648eb2c96
+modified: 1671312672412
+created: 1671312631040
+url: " {{ _.url }}/media/1/toggle-subscription"
+name: toggle_subscription
+description: ""
+method: POST
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1671312631040
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
