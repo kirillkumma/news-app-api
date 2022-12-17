@@ -94,9 +94,29 @@ func (c *UserController) Authenticate() fiber.Handler {
 	}
 }
 
+func (c *UserController) GetSubscriptionList() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		var p dto.GetSubscriptionListParams
+		if err := ctx.ParamsParser(&p); err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(newErrResponse(err))
+		}
+		if err := ctx.QueryParser(&p); err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(newErrResponse(err))
+		}
+
+		res, err := c.userUC.GetSubscriptionList(ctx.Context(), p)
+		if err != nil {
+			return err
+		}
+
+		return ctx.Status(fiber.StatusOK).JSON(newResponse(res))
+	}
+}
+
 func (c *UserController) RegisterRoutes(r fiber.Router, mw *Middleware) {
 	r.Post("/register", c.Register())
 	r.Post("/login", c.Login())
 	r.Post("/logout", c.Logout())
 	r.Post("/authenticate", mw.AuthedUser(), c.Authenticate())
+	r.Get("/:user_id/subscriptions", c.GetSubscriptionList())
 }

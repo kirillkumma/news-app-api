@@ -14,6 +14,7 @@ type (
 		RegisterUser(ctx context.Context, p dto.RegisterUserParams) (entity.User, error)
 		LoginUser(ctx context.Context, p dto.LoginUserParams) (entity.User, error)
 		GetUserByID(ctx context.Context, userID int64) (entity.User, error)
+		GetSubscriptionList(ctx context.Context, p dto.GetSubscriptionListParams) (dto.GetSubscriptionListResult, error)
 	}
 
 	userUseCase struct {
@@ -109,4 +110,27 @@ func (u *userUseCase) GetUserByID(ctx context.Context, userID int64) (user entit
 		}
 	}()
 	return u.userRepo.GetUserByID(ctx, userID)
+}
+
+func (u *userUseCase) GetSubscriptionList(
+	ctx context.Context,
+	p dto.GetSubscriptionListParams,
+) (res dto.GetSubscriptionListResult, err error) {
+	defer func() {
+		if err != nil {
+			var appErr *dto.AppError
+			if !errors.As(err, &appErr) {
+				err = fmt.Errorf("UserUseCase - GetSubscriptionList: %w", err)
+			}
+		}
+	}()
+
+	res.Items, err = u.userRepo.GetSubscriptionList(ctx, p)
+	if err != nil {
+		return
+	}
+
+	res.Total, err = u.userRepo.CountSubscriptions(ctx, p.UserID)
+
+	return
 }

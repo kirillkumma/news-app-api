@@ -1,5 +1,10 @@
 package dto
 
+import (
+	"gopkg.in/guregu/null.v3"
+	"news-app-api/internal/entity"
+)
+
 type (
 	RegisterUserParams struct {
 		Login    string `json:"login"`
@@ -11,6 +16,17 @@ type (
 	LoginUserParams struct {
 		Login    string `json:"login"`
 		Password string `json:"password"`
+	}
+
+	GetSubscriptionListParams struct {
+		UserID int64    `params:"user_id"`
+		Limit  null.Int `query:"limit"`
+		Offset null.Int `query:"offset"`
+	}
+
+	GetSubscriptionListResult struct {
+		Total int64                  `json:"total"`
+		Items []entity.MediaListItem `json:"items"`
 	}
 )
 

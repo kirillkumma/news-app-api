@@ -36,4 +36,23 @@ SELECT ID_user,
 FROM "user"
 WHERE ID_user = $1
 `
+
+	queryGetSubscriptionList = `
+SELECT ID_editor,
+       Num_reg_media_r,
+       Corp_name,
+       Email_red,
+       Editor_surname,
+       Editor_name,
+       (SELECT COUNT(*) FROM subscription WHERE media_id = ID_editor)
+FROM media
+WHERE id_editor IN (SELECT media_id FROM subscription WHERE user_id = $1)
+LIMIT $2 OFFSET $3
+`
+
+	queryCountSubscriptions = `
+SELECT COUNT(*)
+FROM media
+WHERE id_editor IN (SELECT media_id FROM subscription WHERE user_id = $1)
+`
 )
