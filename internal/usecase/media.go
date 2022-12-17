@@ -14,6 +14,8 @@ type (
 		Register(ctx context.Context, p dto.RegisterMediaParams) (entity.Media, error)
 		LoginMedia(ctx context.Context, p dto.LoginMediaParams) (entity.Media, error)
 		GetMediaByID(ctx context.Context, mediaID int64) (entity.Media, error)
+		GetMediaList(ctx context.Context, p dto.GetMediaListParams) (dto.GetMediaListResult, error)
+		ToggleSubscription(ctx context.Context, p dto.ToggleSubscriptionParams) (dto.ToggleSubscriptionResult, error)
 	}
 
 	mediaUseCase struct {
@@ -124,4 +126,59 @@ func (u *mediaUseCase) GetMediaByID(ctx context.Context, mediaID int64) (m entit
 		}
 	}()
 	return u.mediaRepo.GetMediaByID(ctx, mediaID)
+}
+
+func (u *mediaUseCase) GetMediaList(
+	ctx context.Context,
+	p dto.GetMediaListParams,
+) (res dto.GetMediaListResult, err error) {
+	defer func() {
+		if err != nil {
+			var appErr *dto.AppError
+			if !errors.As(err, &appErr) {
+				err = fmt.Errorf("MediaUseCase - GetMediaList: %w", err)
+			}
+		}
+	}()
+
+	res.Items, err = u.mediaRepo.GetMediaList(ctx, p)
+	if err != nil {
+		return
+	}
+
+	res.Total, err = u.mediaRepo.CountMedia(ctx)
+
+	return
+}
+
+func (u *mediaUseCase) ToggleSubscription(
+	ctx context.Context,
+	p dto.ToggleSubscriptionParams,
+) (res dto.ToggleSubscriptionResult, err error) {
+	defer func() {
+		if err != nil {
+			var appErr *dto.AppError
+			if !errors.As(err, &appErr) {
+				err = fmt.Errorf("MediaUseCase - ToggleSubsctiption: %w", err)
+			}
+		}
+	}()
+
+	isExists, err := u.mediaRepo.IsSubscriptionExists(ctx, p.MediaID, p.UserID)
+	if err != nil {
+		return
+	}
+
+	if isExists {
+		err = u.mediaRepo.DeleteSubscription(ctx, p.MediaID, p.UserID)
+	} else {
+		err = u.mediaRepo.CreateSubscription(ctx, p.MediaID, p.UserID)
+	}
+	if err != nil {
+		return
+	}
+
+	res.IsSubscribed = !isExists
+
+	return
 }

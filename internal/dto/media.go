@@ -1,6 +1,9 @@
 package dto
 
-import "news-app-api/internal/entity"
+import (
+	"gopkg.in/guregu/null.v3"
+	"news-app-api/internal/entity"
+)
 
 type (
 	RegisterMediaParams struct {
@@ -14,6 +17,25 @@ type (
 	LoginMediaParams struct {
 		RegistrationNumber int64  `json:"registrationNumber"`
 		Password           string `json:"password"`
+	}
+
+	GetMediaListParams struct {
+		Limit  null.Int `query:"limit"`
+		Offset null.Int `query:"offset"`
+	}
+
+	GetMediaListResult struct {
+		Total int64                  `json:"total"`
+		Items []entity.MediaListItem `json:"items"`
+	}
+
+	ToggleSubscriptionParams struct {
+		MediaID int64 `params:"media_id"`
+		UserID  int64 `params:"-"`
+	}
+
+	ToggleSubscriptionResult struct {
+		IsSubscribed bool `json:"isSubscribed"`
 	}
 )
 

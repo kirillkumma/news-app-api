@@ -60,7 +60,7 @@ func Run() {
 	})
 
 	app.Use(encryptcookie.New(encryptcookie.Config{
-		Key: encryptcookie.GenerateKey(),
+		Key: cfg.Secret,
 	}))
 
 	app.Use(cors.New(cors.Config{
@@ -102,7 +102,7 @@ func Run() {
 		}
 	}()
 
-	log.Debug("Application has started")
+	log.Info("Application has started")
 
 	exit := make(chan os.Signal)
 
@@ -115,5 +115,5 @@ func Run() {
 		log.Fatal(err.Error())
 	}
 
-	log.Debug("Application has been shut down")
+	log.Info("Application has been shut down")
 }
