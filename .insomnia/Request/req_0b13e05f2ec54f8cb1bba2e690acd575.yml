@@ -1,0 +1,29 @@
+_id: req_0b13e05f2ec54f8cb1bba2e690acd575
+type: Request
+parentId: fld_23446ca4baa44fceb65e0a161d42af54
+modified: 1671314181607
+created: 1671314149453
+url: "{{ _.url }}/users/1/subscriptions"
+name: get_subscription_list
+description: ""
+method: GET
+body: {}
+parameters:
+  - id: pair_57149d0a32964aa783aadd42eec104e6
+    name: limit
+    value: "100"
+    description: ""
+  - id: pair_74a17673e1cf486084b19ad240a31a26
+    name: offset
+    value: "0"
+    description: ""
+headers: []
+authentication: {}
+metaSortKey: -1671314149453
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
