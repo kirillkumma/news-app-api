@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
 	"github.com/jackc/pgx/v5"
 	log "github.com/sirupsen/logrus"
@@ -45,14 +44,27 @@ func Run() {
 
 	userRepo := adapter.NewUserRepository(conn)
 	mediaRepo := adapter.NewMediaRepository(conn)
+	audioFileRepo := adapter.NewAudioFileRepository()
 
 	userUC := usecase.NewUserUseCase(userRepo)
 	mediaUC := usecase.NewMediaUseCase(mediaRepo)
+	newsUC := usecase.NewNewsUseCase(
+		func() adapter.NewsRepository {
+			return adapter.NewNewsRepository(conn)
+		},
+		mediaRepo,
+		audioFileRepo,
+	)
+	feedUC := usecase.NewFeedUseCase(func() adapter.NewsRepository {
+		return adapter.NewNewsRepository(conn)
+	})
 
 	middleware := controller.NewMiddleware()
 
 	userController := controller.NewUserController(userUC)
 	mediaController := controller.NewMediaController(mediaUC)
+	newsController := controller.NewNewsController(newsUC)
+	feedController := controller.NewFeedController(feedUC)
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler:          controller.ErrHandler,
@@ -63,10 +75,11 @@ func Run() {
 		Key: cfg.Secret,
 	}))
 
-	app.Use(cors.New(cors.Config{
-		AllowCredentials: true,
-		AllowOrigins:     "http://localhost:3000, http://127.0.0.1:3000, http://0.0.0.0:3000",
-	}))
+	app.Use(func(ctx *fiber.Ctx) error {
+		ctx.Set("access-control-allow-credentials", "true")
+		ctx.Set("access-control-allow-origin", "http://localhost:3000")
+		return ctx.Next()
+	})
 
 	app.Use(func(ctx *fiber.Ctx) error {
 		err = ctx.Next()
@@ -87,13 +100,17 @@ func Run() {
 		return nil
 	})
 
-	router := app.Group("/api")
+	router := app.Group("api")
 
-	userRouter := router.Group("/users")
-	mediaRouter := router.Group("/media")
+	userRouter := router.Group("users")
+	mediaRouter := router.Group("media")
+	newsRouter := router.Group("news")
+	feedRouter := router.Group("feed")
 
 	userController.RegisterRoutes(userRouter, middleware)
 	mediaController.RegisterRoutes(mediaRouter, middleware)
+	newsController.RegisterRoutes(newsRouter, middleware)
+	feedController.RegisterRoutes(feedRouter, middleware)
 
 	go func() {
 		err = app.Listen(fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))

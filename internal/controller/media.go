@@ -117,7 +117,7 @@ func (c *MediaController) ToggleSubscription() fiber.Handler {
 			return ctx.Status(fiber.StatusBadRequest).JSON(newErrResponse(err))
 		}
 
-		p.UserID = ctx.Locals("userID").(int64)
+		p.UserID = ctx.Locals(userIDKey).(int64)
 
 		res, err := c.mediaUC.ToggleSubscription(ctx.Context(), p)
 		if err != nil {
@@ -129,10 +129,10 @@ func (c *MediaController) ToggleSubscription() fiber.Handler {
 }
 
 func (c *MediaController) RegisterRoutes(r fiber.Router, mw *Middleware) {
-	r.Post("/register", c.Register())
-	r.Post("/login", c.Login())
-	r.Post("/logout", c.Logout())
-	r.Post("/authenticate", mw.AuthedMedia(), c.Authenticate())
+	r.Post("register", c.Register())
+	r.Post("login", c.Login())
+	r.Post("logout", c.Logout())
+	r.Post("authenticate", mw.AuthedMedia(), c.Authenticate())
 	r.Get("", c.GetMediaList())
-	r.Post("/:media_id/toggle-subscription", mw.AuthedUser(), c.ToggleSubscription())
+	r.Post(":media_id/toggle-subscription", mw.AuthedUser(), c.ToggleSubscription())
 }

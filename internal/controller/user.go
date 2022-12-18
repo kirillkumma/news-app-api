@@ -114,9 +114,9 @@ func (c *UserController) GetSubscriptionList() fiber.Handler {
 }
 
 func (c *UserController) RegisterRoutes(r fiber.Router, mw *Middleware) {
-	r.Post("/register", c.Register())
-	r.Post("/login", c.Login())
-	r.Post("/logout", c.Logout())
-	r.Post("/authenticate", mw.AuthedUser(), c.Authenticate())
-	r.Get("/:user_id/subscriptions", c.GetSubscriptionList())
+	r.Post("register", c.Register())
+	r.Post("login", c.Login())
+	r.Post("logout", c.Logout())
+	r.Post("authenticate", mw.AuthedUser(), c.Authenticate())
+	r.Get(":user_id/subscriptions", c.GetSubscriptionList())
 }
