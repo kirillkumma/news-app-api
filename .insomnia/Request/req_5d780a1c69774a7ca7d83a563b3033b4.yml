@@ -1,0 +1,31 @@
+_id: req_5d780a1c69774a7ca7d83a563b3033b4
+type: Request
+parentId: fld_95ac3a2b93564414ac5e7972ac903065
+modified: 1671396715165
+created: 1671396202494
+url: "{{ _.url }}/news/2/audio"
+name: create_or_update_audio
+description: ""
+method: PUT
+body:
+  mimeType: multipart/form-data
+  params:
+    - id: pair_6c045566d12c4aa1b12538f78ee47968
+      name: file
+      value: ""
+      description: ""
+      type: file
+      fileName: /Users/kirillkumma/Downloads/file_example_WAV_1MG.wav
+parameters: []
+headers:
+  - name: Content-Type
+    value: multipart/form-data
+authentication: {}
+metaSortKey: -1671396202494
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

@@ -1,0 +1,29 @@
+_id: req_dda8b2bcbaa24ca28b2071309d221c85
+type: Request
+parentId: fld_95ac3a2b93564414ac5e7972ac903065
+modified: 1671395701613
+created: 1671395644972
+url: "{{ _.url }}/news"
+name: create_news
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"title": "Первая новость",
+    	"text": "Текст новости"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+authentication: {}
+metaSortKey: -1671395644972
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

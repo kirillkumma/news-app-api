@@ -1,0 +1,29 @@
+_id: req_a7bd964aea5245b8b59040315363eeb6
+type: Request
+parentId: fld_030bd788e3644ed0884dd8385f3aa266
+modified: 1671398523995
+created: 1671398504477
+url: "{{ _.url }}/feed"
+name: get_feed
+description: ""
+method: GET
+body: {}
+parameters:
+  - id: pair_ee243205a8b340eaa75bfb84af08cd61
+    name: limit
+    value: "100"
+    description: ""
+  - id: pair_b744fa2d07b64a09808ee6274ef17cd0
+    name: offset
+    value: "0"
+    description: ""
+headers: []
+authentication: {}
+metaSortKey: -1671398504477
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

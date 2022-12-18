@@ -1,0 +1,21 @@
+_id: req_189c0ca28df7438397cef07bc1e52ad1
+type: Request
+parentId: fld_95ac3a2b93564414ac5e7972ac903065
+modified: 1671399134643
+created: 1671399123884
+url: "{{ _.url }}/news/2"
+name: get_news
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1671399123884
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
