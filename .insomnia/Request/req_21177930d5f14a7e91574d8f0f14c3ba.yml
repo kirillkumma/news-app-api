@@ -1,0 +1,21 @@
+_id: req_21177930d5f14a7e91574d8f0f14c3ba
+type: Request
+parentId: fld_95ac3a2b93564414ac5e7972ac903065
+modified: 1671451912406
+created: 1671451897326
+url: "{{ _.url }}/news/2/toggle-favorite"
+name: toggle_favorite
+description: ""
+method: POST
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1671451897326
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

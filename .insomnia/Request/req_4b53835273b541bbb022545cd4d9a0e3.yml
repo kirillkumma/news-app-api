@@ -1,0 +1,29 @@
+_id: req_4b53835273b541bbb022545cd4d9a0e3
+type: Request
+parentId: fld_9c60c516c1c1413cb1fb36699fead8ed
+modified: 1671451998787
+created: 1671451960861
+url: "{{ _.url }}/favorites"
+name: get_favorite_list
+description: ""
+method: GET
+body: {}
+parameters:
+  - id: pair_019ff45b37ba4e289ca7cd77e82fb936
+    name: limit
+    value: "100"
+    description: ""
+  - id: pair_93925691eab44321a809ff1512eb449c
+    name: offset
+    value: "0"
+    description: ""
+headers: []
+authentication: {}
+metaSortKey: -1671451960861
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

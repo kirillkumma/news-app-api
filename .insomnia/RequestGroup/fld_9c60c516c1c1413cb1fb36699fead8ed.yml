@@ -1,0 +1,10 @@
+_id: fld_9c60c516c1c1413cb1fb36699fead8ed
+type: RequestGroup
+parentId: wrk_f58d5fa567a14750ab15d714ffc697fc
+modified: 1671451959314
+created: 1671451959314
+name: favorites
+description: ""
+environment: {}
+environmentPropertyOrder: null
+metaSortKey: -1671451959314
