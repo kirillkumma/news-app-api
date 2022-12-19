@@ -39,6 +39,6 @@ func (u *feedUseCase) GetFeed(ctx context.Context, p dto.GetFeedParams) (res dto
 		return
 	}
 
-	res.Total, err = r.CountFeedNews(ctx, p.UserID)
+	res.Total, err = r.CountFeedNews(ctx, p.UserID, p.Since)
 	return
 }

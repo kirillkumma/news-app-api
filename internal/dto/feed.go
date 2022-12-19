@@ -8,6 +8,7 @@ import (
 type (
 	GetFeedParams struct {
 		UserID int64
+		Since  null.Int `query:"since"`
 		Limit  null.Int `query:"limit"`
 		Offset null.Int `query:"offset"`
 	}

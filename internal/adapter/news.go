@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jackc/pgx/v5"
+	"gopkg.in/guregu/null.v3"
 	"news-app-api/internal/dto"
 	"news-app-api/internal/entity"
 )
@@ -16,7 +17,7 @@ type (
 		AddNewsToFeed(ctx context.Context, newsID int64) error
 		GetNews(ctx context.Context, newsID int64) (entity.NewsListItem, error)
 		GetFeedNewsList(ctx context.Context, p dto.GetFeedParams) ([]entity.NewsListItem, error)
-		CountFeedNews(ctx context.Context, userID int64) (int64, error)
+		CountFeedNews(ctx context.Context, userID int64, since null.Int) (int64, error)
 	}
 
 	newsRepository struct {
@@ -159,7 +160,7 @@ func (r *newsRepository) GetFeedNewsList(
 		}
 	}()
 	list = make([]entity.NewsListItem, 0, p.Limit.Int64)
-	rows, err := r.q.Query(ctx, queryGetFeedNewsList, p.UserID, p.Limit, p.Offset)
+	rows, err := r.q.Query(ctx, queryGetFeedNewsList, p.UserID, p.Since, p.Limit, p.Offset)
 	if err != nil {
 		return
 	}
@@ -186,7 +187,7 @@ func (r *newsRepository) GetFeedNewsList(
 	return
 }
 
-func (r *newsRepository) CountFeedNews(ctx context.Context, userID int64) (v int64, err error) {
+func (r *newsRepository) CountFeedNews(ctx context.Context, userID int64, since null.Int) (v int64, err error) {
 	defer func() {
 		if err != nil {
 			var appErr *dto.AppError
@@ -195,7 +196,7 @@ func (r *newsRepository) CountFeedNews(ctx context.Context, userID int64) (v int
 			}
 		}
 	}()
-	row := r.q.QueryRow(ctx, queryCountFeedNews, userID)
+	row := r.q.QueryRow(ctx, queryCountFeedNews, userID, since)
 	err = row.Scan(&v)
 	return
 }
