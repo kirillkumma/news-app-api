@@ -43,4 +43,14 @@ type (
 	ToggleFavoriteResult struct {
 		IsFavorite bool `json:"isFavorite"`
 	}
+
+	CreateOrUpdateVideoParams struct {
+		NewsID  int64 `params:"news_id"`
+		MediaID int64
+		File    multipart.File
+	}
+
+	GetVideoParams struct {
+		NewsID int64 `params:"news_id"`
+	}
 )

@@ -161,6 +161,50 @@ func (c *NewsController) ToggleFavorite() fiber.Handler {
 	}
 }
 
+func (c *NewsController) CreateOrUpdateVideo() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		var p dto.CreateOrUpdateVideoParams
+		if err := ctx.ParamsParser(&p); err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(newErrResponse(err))
+		}
+
+		p.MediaID = ctx.Locals(mediaIDKey).(int64)
+
+		f, err := ctx.FormFile("file")
+		if err != nil {
+			return err
+		}
+
+		p.File, err = f.Open()
+		if err != nil {
+			return err
+		}
+		defer p.File.Close()
+
+		err = c.newsUC.CreateOrUpdateVideo(ctx.Context(), p)
+
+		return ctx.SendStatus(fiber.StatusNoContent)
+	}
+}
+
+func (c *NewsController) GetVideo() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		var p dto.GetVideoParams
+		if err := ctx.ParamsParser(&p); err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(newErrResponse(err))
+		}
+
+		data, err := c.newsUC.GetVideo(ctx.Context(), p)
+		if err != nil {
+			return err
+		}
+
+		ctx.Set("content-length", fmt.Sprint(len(data)))
+		ctx.Set("content-type", "video/mp4")
+		return ctx.Status(fiber.StatusOK).Send(data)
+	}
+}
+
 func (c *NewsController) RegisterRoutes(r fiber.Router, mw *Middleware) {
 	r.Post("", mw.AuthedMedia(), c.CreateNews())
 	r.Put(":news_id/audio", mw.AuthedMedia(), c.CreateOrUpdateAudio())
@@ -169,4 +213,6 @@ func (c *NewsController) RegisterRoutes(r fiber.Router, mw *Middleware) {
 	r.Put(":news_id/image", mw.AuthedMedia(), c.CreateOrUpdateImage())
 	r.Get(":news_id/image", c.GetImage())
 	r.Post(":news_id/toggle-favorite", mw.AuthedUser(), c.ToggleFavorite())
+	r.Put(":news_id/video", mw.AuthedMedia(), c.CreateOrUpdateVideo())
+	r.Get(":news_id/video", c.GetVideo())
 }

@@ -20,6 +20,8 @@ type (
 		GetImage(ctx context.Context, p dto.GetImageParams) ([]byte, error)
 		ToggleFavorite(ctx context.Context, p dto.ToggleFavoriteParams) (dto.ToggleFavoriteResult, error)
 		GetFavoriteList(ctx context.Context, p dto.GetFavoriteListParams) (dto.GetFavoriteListResult, error)
+		CreateOrUpdateVideo(ctx context.Context, p dto.CreateOrUpdateVideoParams) error
+		GetVideo(ctx context.Context, p dto.GetVideoParams) ([]byte, error)
 	}
 
 	newsUseCase struct {
@@ -27,6 +29,7 @@ type (
 		mediaRepo     adapter.MediaRepository
 		audioFileRepo adapter.AudioFileRepository
 		imageFileRepo adapter.ImageFileRepository
+		videoFileRepo adapter.VideoFileRepository
 	}
 )
 
@@ -35,8 +38,15 @@ func NewNewsUseCase(
 	mediaRepo adapter.MediaRepository,
 	audioFileRepo adapter.AudioFileRepository,
 	imageFileRepo adapter.ImageFileRepository,
+	videoFileRepo adapter.VideoFileRepository,
 ) NewsUseCase {
-	return &newsUseCase{newsRepo, mediaRepo, audioFileRepo, imageFileRepo}
+	return &newsUseCase{
+		newsRepo,
+		mediaRepo,
+		audioFileRepo,
+		imageFileRepo,
+		videoFileRepo,
+	}
 }
 
 func (u *newsUseCase) CreateNews(ctx context.Context, p dto.CreateNewsParams) (n entity.News, err error) {
@@ -249,4 +259,57 @@ func (u *newsUseCase) GetFavoriteList(
 
 	res.Total, err = r.CountFavorites(ctx, p.UserID)
 	return
+}
+
+func (u *newsUseCase) CreateOrUpdateVideo(ctx context.Context, p dto.CreateOrUpdateVideoParams) (err error) {
+	defer func() {
+		if err != nil {
+			var appErr *dto.AppError
+			if !errors.As(err, &appErr) {
+				err = fmt.Errorf("NewsUseCase - CreateOrUpdateVideo: %w", err)
+			}
+		}
+	}()
+
+	n, err := u.newsRepo().GetNews(ctx, p.NewsID)
+	if err != nil {
+		return
+	}
+
+	m, err := u.mediaRepo.GetMediaByRegistrationNumber(ctx, n.Media.RegistrationNumber)
+	if err != nil {
+		return
+	}
+
+	if m.ID != p.MediaID {
+		return &dto.AppError{
+			Code:    dto.ErrCodeUnauthorized,
+			Message: "Недостаточно прав для совершения данной операции",
+		}
+	}
+
+	data, err := io.ReadAll(p.File)
+	if err != nil {
+		return
+	}
+
+	return u.videoFileRepo.Store(ctx, fmt.Sprintf("%d.mp4", p.NewsID), data)
+}
+
+func (u *newsUseCase) GetVideo(ctx context.Context, p dto.GetVideoParams) (data []byte, err error) {
+	defer func() {
+		if err != nil {
+			var appErr *dto.AppError
+			if !errors.As(err, &appErr) {
+				err = fmt.Errorf("NewsUseCase - GetVideo: %w", err)
+			}
+		}
+	}()
+
+	n, err := u.newsRepo().GetNews(ctx, p.NewsID)
+	if err != nil {
+		return
+	}
+
+	return u.videoFileRepo.Get(ctx, fmt.Sprintf("%d.mp4", n.ID))
 }

@@ -52,6 +52,10 @@ func Run() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+	videoFileRepo, err := adapter.NewVideoFileRepository()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
 	userUC := usecase.NewUserUseCase(userRepo)
 	mediaUC := usecase.NewMediaUseCase(mediaRepo)
@@ -62,6 +66,7 @@ func Run() {
 		mediaRepo,
 		audioFileRepo,
 		imageFileRepo,
+		videoFileRepo,
 	)
 	feedUC := usecase.NewFeedUseCase(func() adapter.NewsRepository {
 		return adapter.NewNewsRepository(conn)
@@ -78,6 +83,7 @@ func Run() {
 	app := fiber.New(fiber.Config{
 		ErrorHandler:          controller.ErrHandler,
 		DisableStartupMessage: true,
+		BodyLimit:             4 * 1024 * 1024 * 1024,
 	})
 
 	app.Use(encryptcookie.New(encryptcookie.Config{
