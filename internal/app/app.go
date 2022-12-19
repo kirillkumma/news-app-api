@@ -44,7 +44,14 @@ func Run() {
 
 	userRepo := adapter.NewUserRepository(conn)
 	mediaRepo := adapter.NewMediaRepository(conn)
-	audioFileRepo := adapter.NewAudioFileRepository()
+	audioFileRepo, err := adapter.NewAudioFileRepository()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	imageFileRepo, err := adapter.NewImageFileRepository()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
 	userUC := usecase.NewUserUseCase(userRepo)
 	mediaUC := usecase.NewMediaUseCase(mediaRepo)
@@ -54,6 +61,7 @@ func Run() {
 		},
 		mediaRepo,
 		audioFileRepo,
+		imageFileRepo,
 	)
 	feedUC := usecase.NewFeedUseCase(func() adapter.NewsRepository {
 		return adapter.NewNewsRepository(conn)

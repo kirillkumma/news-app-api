@@ -11,25 +11,24 @@ import (
 )
 
 type (
-	AudioFileRepository interface {
+	ImageFileRepository interface {
 		Store(ctx context.Context, filename string, data []byte) error
 		Get(ctx context.Context, filename string) ([]byte, error)
 	}
 
-	audioFileRepository struct {
+	imageFileRepository struct {
 	}
 )
 
-func NewAudioFileRepository() (AudioFileRepository, error) {
-	err := os.Mkdir("audio", 0750)
+func NewImageFileRepository() (ImageFileRepository, error) {
+	err := os.Mkdir("image", 0750)
 	if err != nil && !strings.Contains(err.Error(), "exists") {
 		return nil, err
 	}
-
-	return &audioFileRepository{}, nil
+	return &imageFileRepository{}, nil
 }
 
-func (a audioFileRepository) Store(ctx context.Context, filename string, data []byte) (err error) {
+func (i imageFileRepository) Store(ctx context.Context, filename string, data []byte) (err error) {
 	defer func() {
 		if err != nil {
 			var appErr *dto.AppError
@@ -38,7 +37,7 @@ func (a audioFileRepository) Store(ctx context.Context, filename string, data []
 			}
 		}
 	}()
-	f, err := os.OpenFile(fmt.Sprintf("audio/%s", filename), os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0755)
+	f, err := os.OpenFile(fmt.Sprintf("image/%s", filename), os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0755)
 	if err != nil {
 		return
 	}
@@ -47,7 +46,7 @@ func (a audioFileRepository) Store(ctx context.Context, filename string, data []
 	return
 }
 
-func (a audioFileRepository) Get(ctx context.Context, filename string) (data []byte, err error) {
+func (i imageFileRepository) Get(ctx context.Context, filename string) (data []byte, err error) {
 	defer func() {
 		if err != nil {
 			var appErr *dto.AppError
@@ -56,7 +55,7 @@ func (a audioFileRepository) Get(ctx context.Context, filename string) (data []b
 			}
 		}
 	}()
-	f, err := os.Open(fmt.Sprintf("audio/%s", filename))
+	f, err := os.Open(fmt.Sprintf("image/%s", filename))
 	if err != nil {
 		fmt.Println(err)
 		err = &dto.AppError{

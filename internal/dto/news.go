@@ -24,4 +24,14 @@ type (
 	GetNewsParams struct {
 		NewsID int64 `params:"news_id"`
 	}
+
+	CreateOrUpdateImageParams struct {
+		NewsID  int64 `params:"news_id"`
+		MediaID int64
+		File    multipart.File
+	}
+
+	GetImageParams struct {
+		NewsID int64 `params:"news_id"`
+	}
 )

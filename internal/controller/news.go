@@ -96,9 +96,58 @@ func (c *NewsController) GetNews() fiber.Handler {
 	}
 }
 
+func (c *NewsController) CreateOrUpdateImage() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		var p dto.CreateOrUpdateImageParams
+		if err := ctx.ParamsParser(&p); err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(newErrResponse(err))
+		}
+
+		f, err := ctx.FormFile("file")
+		if err != nil {
+			return err
+		}
+
+		p.File, err = f.Open()
+		if err != nil {
+			return err
+		}
+		defer p.File.Close()
+
+		p.MediaID = ctx.Locals(mediaIDKey).(int64)
+
+		err = c.newsUC.CreateOrUpdateImage(ctx.Context(), p)
+		if err != nil {
+			return err
+		}
+
+		return ctx.SendStatus(fiber.StatusNoContent)
+	}
+}
+
+func (c *NewsController) GetImage() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		var p dto.GetImageParams
+		if err := ctx.ParamsParser(&p); err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(newErrResponse(err))
+		}
+
+		data, err := c.newsUC.GetImage(ctx.Context(), p)
+		if err != nil {
+			return err
+		}
+
+		ctx.Set("content-length", fmt.Sprint(len(data)))
+		ctx.Set("content-type", "image/png")
+		return ctx.Status(fiber.StatusOK).Send(data)
+	}
+}
+
 func (c *NewsController) RegisterRoutes(r fiber.Router, mw *Middleware) {
 	r.Post("", mw.AuthedMedia(), c.CreateNews())
 	r.Put(":news_id/audio", mw.AuthedMedia(), c.CreateOrUpdateAudio())
 	r.Get(":news_id/audio", c.GetAudio())
 	r.Get(":news_id", c.GetNews())
+	r.Put(":news_id/image", mw.AuthedMedia(), c.CreateOrUpdateImage())
+	r.Get(":news_id/image", c.GetImage())
 }
