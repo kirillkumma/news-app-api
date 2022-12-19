@@ -18,6 +18,8 @@ type (
 		GetAudio(ctx context.Context, p dto.GetAudioParams) ([]byte, error)
 		GetNews(ctx context.Context, p dto.GetNewsParams) (entity.NewsListItem, error)
 		GetImage(ctx context.Context, p dto.GetImageParams) ([]byte, error)
+		ToggleFavorite(ctx context.Context, p dto.ToggleFavoriteParams) (dto.ToggleFavoriteResult, error)
+		GetFavoriteList(ctx context.Context, p dto.GetFavoriteListParams) (dto.GetFavoriteListResult, error)
 	}
 
 	newsUseCase struct {
@@ -189,4 +191,62 @@ func (u *newsUseCase) GetImage(ctx context.Context, p dto.GetImageParams) (data 
 	}
 
 	return u.imageFileRepo.Get(ctx, fmt.Sprintf("%d.png", n.ID))
+}
+
+func (u *newsUseCase) ToggleFavorite(
+	ctx context.Context,
+	p dto.ToggleFavoriteParams,
+) (res dto.ToggleFavoriteResult, err error) {
+	defer func() {
+		if err != nil {
+			var appErr *dto.AppError
+			if !errors.As(err, &appErr) {
+				err = fmt.Errorf("NewsUseCase - ToggleFavorite: %w", err)
+			}
+		}
+	}()
+
+	r := u.newsRepo()
+
+	isFavorite, err := r.IsFavorite(ctx, p.UserID, p.NewsID)
+	if err != nil {
+		return
+	}
+
+	if !isFavorite {
+		err = r.AddToFavorite(ctx, p.UserID, p.NewsID)
+	} else {
+		err = r.RemoveFromFavorite(ctx, p.UserID, p.NewsID)
+	}
+	if err != nil {
+		return
+	}
+
+	res.IsFavorite = !isFavorite
+
+	return
+}
+
+func (u *newsUseCase) GetFavoriteList(
+	ctx context.Context,
+	p dto.GetFavoriteListParams,
+) (res dto.GetFavoriteListResult, err error) {
+	defer func() {
+		if err != nil {
+			var appErr *dto.AppError
+			if !errors.As(err, &appErr) {
+				err = fmt.Errorf("NewsUseCase - GetFavoriteList: %w", err)
+			}
+		}
+	}()
+
+	r := u.newsRepo()
+
+	res.Items, err = r.GetFavoriteList(ctx, p)
+	if err != nil {
+		return
+	}
+
+	res.Total, err = r.CountFavorites(ctx, p.UserID)
+	return
 }

@@ -44,6 +44,7 @@ SELECT news.id_news,
        (SELECT COUNT(*) FROM subscription WHERE media_id = media.id_editor),
        news.title,
        news.text_content,
+       EXISTS(SELECT 1 FROM favorite WHERE user_id = $1 AND news_id = news.id_news),
        EXTRACT(EPOCH FROM news.release)::BIGINT
 FROM feed
 INNER JOIN news ON
@@ -62,5 +63,46 @@ INNER JOIN news ON
     news.id_news = feed.id_news
 WHERE id_user = $1
   AND ($2::BIGINT IS NULL OR EXTRACT(EPOCH FROM news.release)::BIGINT >= $2::BIGINT)
+`
+
+	queryIsFavorite = `
+SELECT EXISTS(SELECT 1 FROM favorite WHERE user_id = $1 AND news_id = $2)
+`
+
+	queryAddToFavorite = `
+INSERT INTO favorite (user_id, news_id)
+VALUES ($1, $2)
+`
+
+	queryRemoveFromFavorite = `
+DELETE FROM favorite WHERE user_id = $1 AND news_id = $2
+`
+
+	queryGetFavoriteList = `
+SELECT news.id_news,
+       media.id_editor,
+       media.num_reg_media_r,
+       media.corp_name,
+       media.email_red,
+       media.editor_name,
+       media.editor_surname,
+       (SELECT COUNT(*) FROM subscription WHERE media_id = media.id_editor),
+       news.title,
+       news.text_content,
+       TRUE,
+       EXTRACT(EPOCH FROM news.release)::BIGINT
+FROM favorite
+INNER JOIN news ON
+    favorite.news_id = news.id_news
+INNER JOIN media ON
+    media.num_reg_media_r = news.num_reg_media_news
+WHERE user_id = $1
+LIMIT $2 OFFSET $3
+`
+
+	queryCountFavorites = `
+SELECT COUNT(*)
+FROM favorite
+WHERE user_id = $1
 `
 )

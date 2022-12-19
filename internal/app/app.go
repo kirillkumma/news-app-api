@@ -73,6 +73,7 @@ func Run() {
 	mediaController := controller.NewMediaController(mediaUC)
 	newsController := controller.NewNewsController(newsUC)
 	feedController := controller.NewFeedController(feedUC)
+	favoriteController := controller.NewFavoriteController(newsUC)
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler:          controller.ErrHandler,
@@ -114,11 +115,13 @@ func Run() {
 	mediaRouter := router.Group("media")
 	newsRouter := router.Group("news")
 	feedRouter := router.Group("feed")
+	favoriteRouter := router.Group("favorites")
 
 	userController.RegisterRoutes(userRouter, middleware)
 	mediaController.RegisterRoutes(mediaRouter, middleware)
 	newsController.RegisterRoutes(newsRouter, middleware)
 	feedController.RegisterRoutes(feedRouter, middleware)
+	favoriteController.RegisterRoutes(favoriteRouter, middleware)
 
 	go func() {
 		err = app.Listen(fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))

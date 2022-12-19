@@ -10,10 +10,11 @@ type (
 	}
 
 	NewsListItem struct {
-		ID        int64         `json:"id"`
-		Media     MediaListItem `json:"media"`
-		Title     string        `json:"title"`
-		Text      string        `json:"text"`
-		CreatedAt int64         `json:"createdAt"`
+		ID         int64         `json:"id"`
+		Media      MediaListItem `json:"media"`
+		Title      string        `json:"title"`
+		Text       string        `json:"text"`
+		IsFavorite bool          `json:"isFavorite"`
+		CreatedAt  int64         `json:"createdAt"`
 	}
 )

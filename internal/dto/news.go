@@ -34,4 +34,13 @@ type (
 	GetImageParams struct {
 		NewsID int64 `params:"news_id"`
 	}
+
+	ToggleFavoriteParams struct {
+		NewsID int64 `params:"news_id"`
+		UserID int64
+	}
+
+	ToggleFavoriteResult struct {
+		IsFavorite bool `json:"isFavorite"`
+	}
 )

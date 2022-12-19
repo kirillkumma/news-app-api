@@ -143,6 +143,24 @@ func (c *NewsController) GetImage() fiber.Handler {
 	}
 }
 
+func (c *NewsController) ToggleFavorite() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		var p dto.ToggleFavoriteParams
+		if err := ctx.ParamsParser(&p); err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(newErrResponse(err))
+		}
+
+		p.UserID = ctx.Locals(userIDKey).(int64)
+
+		res, err := c.newsUC.ToggleFavorite(ctx.Context(), p)
+		if err != nil {
+			return err
+		}
+
+		return ctx.Status(fiber.StatusOK).JSON(newResponse(res))
+	}
+}
+
 func (c *NewsController) RegisterRoutes(r fiber.Router, mw *Middleware) {
 	r.Post("", mw.AuthedMedia(), c.CreateNews())
 	r.Put(":news_id/audio", mw.AuthedMedia(), c.CreateOrUpdateAudio())
@@ -150,4 +168,5 @@ func (c *NewsController) RegisterRoutes(r fiber.Router, mw *Middleware) {
 	r.Get(":news_id", c.GetNews())
 	r.Put(":news_id/image", mw.AuthedMedia(), c.CreateOrUpdateImage())
 	r.Get(":news_id/image", c.GetImage())
+	r.Post(":news_id/toggle-favorite", mw.AuthedUser(), c.ToggleFavorite())
 }
