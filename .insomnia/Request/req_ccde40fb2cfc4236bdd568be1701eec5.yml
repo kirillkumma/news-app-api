@@ -1,0 +1,32 @@
+_id: req_ccde40fb2cfc4236bdd568be1701eec5
+type: Request
+parentId: fld_95ac3a2b93564414ac5e7972ac903065
+modified: 1671453706014
+created: 1671453647615
+url: "{{ _.url }}/news/2/video"
+name: create_or_update_video
+description: ""
+method: PUT
+body:
+  mimeType: multipart/form-data
+  params:
+    - id: pair_aa936291fd8f45cf962e141fed613224
+      name: file
+      value: ""
+      description: ""
+      type: file
+      fileName: /Users/kirillkumma/Documents/Zoom/2022-12-14 18.12.38 Zoom
+        Meeting/video1826981496.mp4
+parameters: []
+headers:
+  - name: Content-Type
+    value: multipart/form-data
+authentication: {}
+metaSortKey: -1671453647615
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

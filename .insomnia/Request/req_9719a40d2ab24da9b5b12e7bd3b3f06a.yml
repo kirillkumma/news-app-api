@@ -1,0 +1,21 @@
+_id: req_9719a40d2ab24da9b5b12e7bd3b3f06a
+type: Request
+parentId: fld_95ac3a2b93564414ac5e7972ac903065
+modified: 1671453980151
+created: 1671453968448
+url: "{{ _.url }}/news/2/video"
+name: get_video
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1671453968448
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
