@@ -1,0 +1,31 @@
+_id: req_79cac5e3381747a8bb0ed3dbc37c51d4
+type: Request
+parentId: fld_95ac3a2b93564414ac5e7972ac903065
+modified: 1671448456354
+created: 1671448420705
+url: "{{ _.url }}/news/2/image"
+name: create_or_update_image
+description: ""
+method: PUT
+body:
+  mimeType: multipart/form-data
+  params:
+    - id: pair_b49d6db3564e44f5886812ad1aee1699
+      name: file
+      value: ""
+      description: ""
+      type: file
+      fileName: /Users/kirillkumma/Downloads/Untitled.png
+parameters: []
+headers:
+  - name: Content-Type
+    value: multipart/form-data
+authentication: {}
+metaSortKey: -1671448420705
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

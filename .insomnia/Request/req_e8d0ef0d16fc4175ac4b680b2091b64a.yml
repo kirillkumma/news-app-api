@@ -1,0 +1,21 @@
+_id: req_e8d0ef0d16fc4175ac4b680b2091b64a
+type: Request
+parentId: fld_95ac3a2b93564414ac5e7972ac903065
+modified: 1671448664172
+created: 1671448650335
+url: "{{ _.url }}/news/2/image"
+name: get_image
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1671448650335
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
