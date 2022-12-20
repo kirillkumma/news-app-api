@@ -207,6 +207,7 @@ func (r *mediaRepository) GetMediaList(
 	if err != nil {
 		return
 	}
+	defer rows.Close()
 	for rows.Next() {
 		item := entity.MediaListItem{}
 		err = rows.Scan(

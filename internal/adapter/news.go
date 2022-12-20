@@ -169,6 +169,7 @@ func (r *newsRepository) GetFeedNewsList(
 	if err != nil {
 		return
 	}
+	defer rows.Close()
 	for rows.Next() {
 		item := entity.NewsListItem{}
 		err = rows.Scan(
@@ -264,6 +265,7 @@ func (r *newsRepository) GetFavoriteList(
 	if err != nil {
 		return
 	}
+	defer rows.Close()
 	for rows.Next() {
 		item := entity.NewsListItem{}
 		err = rows.Scan(
