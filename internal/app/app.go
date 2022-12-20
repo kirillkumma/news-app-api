@@ -30,7 +30,12 @@ func Run() {
 
 	log.Debug("Loaded configuration")
 
-	db, err := pgxpool.New(context.Background(), cfg.DBURL)
+	dbCfg, err := pgxpool.ParseConfig(cfg.DBURL)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	db, err := pgxpool.NewWithConfig(context.Background(), dbCfg)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

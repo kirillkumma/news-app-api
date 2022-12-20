@@ -27,7 +27,7 @@ services:
     ports:
       - '8000:8000'
     environment:
-      - 'DB_URL=postgres://root:pass@postgres:5432/news'
+      - 'DB_URL=postgres://root:pass@postgres:5432/news?pool_max_conns=120&pool_max_conn_lifetime=60s'
 
 volumes:
   db:
