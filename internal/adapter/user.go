@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"news-app-api/internal/dto"
 	"news-app-api/internal/entity"
 )
@@ -20,11 +21,11 @@ type (
 	}
 
 	userRepository struct {
-		db *pgx.Conn
+		db *pgxpool.Pool
 	}
 )
 
-func NewUserRepository(db *pgx.Conn) UserRepository {
+func NewUserRepository(db *pgxpool.Pool) UserRepository {
 	return &userRepository{db}
 }
 

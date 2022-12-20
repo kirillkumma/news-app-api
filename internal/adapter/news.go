@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"gopkg.in/guregu/null.v3"
 	"news-app-api/internal/dto"
 	"news-app-api/internal/entity"
@@ -26,12 +27,12 @@ type (
 	}
 
 	newsRepository struct {
-		db *pgx.Conn
+		db *pgxpool.Pool
 		q  Querier
 	}
 )
 
-func NewNewsRepository(db *pgx.Conn) NewsRepository {
+func NewNewsRepository(db *pgxpool.Pool) NewsRepository {
 	return &newsRepository{db, db}
 }
 

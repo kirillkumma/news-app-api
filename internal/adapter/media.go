@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"news-app-api/internal/dto"
 	"news-app-api/internal/entity"
 )
@@ -24,11 +25,11 @@ type (
 	}
 
 	mediaRepository struct {
-		db *pgx.Conn
+		db *pgxpool.Pool
 	}
 )
 
-func NewMediaRepository(db *pgx.Conn) MediaRepository {
+func NewMediaRepository(db *pgxpool.Pool) MediaRepository {
 	return &mediaRepository{db}
 }
 

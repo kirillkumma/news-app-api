@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	log "github.com/sirupsen/logrus"
 	"news-app-api/config"
 	"news-app-api/internal/adapter"
@@ -30,21 +30,21 @@ func Run() {
 
 	log.Debug("Loaded configuration")
 
-	conn, err := pgx.Connect(context.Background(), cfg.DBURL)
+	db, err := pgxpool.New(context.Background(), cfg.DBURL)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	defer conn.Close(context.Background())
+	defer db.Close()
 
-	err = conn.Ping(context.Background())
+	err = db.Ping(context.Background())
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
 	log.Debug("Connected to PostgreSQL")
 
-	userRepo := adapter.NewUserRepository(conn)
-	mediaRepo := adapter.NewMediaRepository(conn)
+	userRepo := adapter.NewUserRepository(db)
+	mediaRepo := adapter.NewMediaRepository(db)
 	audioFileRepo, err := adapter.NewAudioFileRepository()
 	if err != nil {
 		log.Fatal(err.Error())
@@ -62,7 +62,7 @@ func Run() {
 	mediaUC := usecase.NewMediaUseCase(mediaRepo)
 	newsUC := usecase.NewNewsUseCase(
 		func() adapter.NewsRepository {
-			return adapter.NewNewsRepository(conn)
+			return adapter.NewNewsRepository(db)
 		},
 		mediaRepo,
 		audioFileRepo,
@@ -70,7 +70,7 @@ func Run() {
 		videoFileRepo,
 	)
 	feedUC := usecase.NewFeedUseCase(func() adapter.NewsRepository {
-		return adapter.NewNewsRepository(conn)
+		return adapter.NewNewsRepository(db)
 	})
 
 	middleware := controller.NewMiddleware()
