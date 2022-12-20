@@ -68,7 +68,13 @@ func (c *UserController) Login() fiber.Handler {
 
 func (c *UserController) Logout() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		ctx.ClearCookie(userSessionCookie)
+		ctx.Cookie(&fiber.Cookie{
+			Name:     userSessionCookie,
+			Value:    "",
+			HTTPOnly: true,
+			Expires:  time.Unix(0, 0),
+			SameSite: "lax",
+		})
 		return ctx.SendStatus(fiber.StatusNoContent)
 	}
 }
