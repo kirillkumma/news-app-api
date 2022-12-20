@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
 	"github.com/jackc/pgx/v5"
 	log "github.com/sirupsen/logrus"
@@ -90,11 +91,10 @@ func Run() {
 		Key: cfg.Secret,
 	}))
 
-	app.Use(func(ctx *fiber.Ctx) error {
-		ctx.Set("access-control-allow-credentials", "true")
-		ctx.Set("access-control-allow-origin", "http://localhost:3000")
-		return ctx.Next()
-	})
+	app.Use(cors.New(cors.Config{
+		AllowCredentials: true,
+		AllowOrigins:     "http://localhost:3000, http://127.0.0.1:3000, http://0.0.0.0:3000",
+	}))
 
 	app.Use(func(ctx *fiber.Ctx) error {
 		err = ctx.Next()
