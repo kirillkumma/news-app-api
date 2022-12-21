@@ -68,7 +68,13 @@ func (c *MediaController) Login() fiber.Handler {
 
 func (c *MediaController) Logout() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		ctx.ClearCookie(mediaSessionCookie)
+		ctx.Cookie(&fiber.Cookie{
+			Name:     mediaSessionCookie,
+			Value:    "",
+			SameSite: "lax",
+			Expires:  time.Unix(0, 0),
+			HTTPOnly: true,
+		})
 		return ctx.SendStatus(fiber.StatusNoContent)
 	}
 }
