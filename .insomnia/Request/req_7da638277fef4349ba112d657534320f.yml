@@ -1,0 +1,29 @@
+_id: req_7da638277fef4349ba112d657534320f
+type: Request
+parentId: fld_5d651a4f5fca4d6880e7db9648eb2c96
+modified: 1671646295780
+created: 1671646257345
+url: "{{ _.url }}/media/1/news"
+name: get_news_list
+description: ""
+method: GET
+body: {}
+parameters:
+  - id: pair_7ea823cdf8cb4841a48973ca34fa9005
+    name: limit
+    value: "100"
+    description: ""
+  - id: pair_eb68098134da480599cc248c61e1ff88
+    name: offset
+    value: "0"
+    description: ""
+headers: []
+authentication: {}
+metaSortKey: -1671646257345
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
