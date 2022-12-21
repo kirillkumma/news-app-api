@@ -16,15 +16,17 @@ type (
 		GetMediaByID(ctx context.Context, mediaID int64) (entity.Media, error)
 		GetMediaList(ctx context.Context, p dto.GetMediaListParams) (dto.GetMediaListResult, error)
 		ToggleSubscription(ctx context.Context, p dto.ToggleSubscriptionParams) (dto.ToggleSubscriptionResult, error)
+		GetNewsList(ctx context.Context, p dto.GetNewsListParams) (dto.GetNewsListResult, error)
 	}
 
 	mediaUseCase struct {
 		mediaRepo adapter.MediaRepository
+		newsRepo  func() adapter.NewsRepository
 	}
 )
 
-func NewMediaUseCase(mediaRepo adapter.MediaRepository) MediaUseCase {
-	return &mediaUseCase{mediaRepo}
+func NewMediaUseCase(mediaRepo adapter.MediaRepository, newsRepo func() adapter.NewsRepository) MediaUseCase {
+	return &mediaUseCase{mediaRepo, newsRepo}
 }
 
 func (u *mediaUseCase) Register(ctx context.Context, p dto.RegisterMediaParams) (m entity.Media, err error) {
@@ -180,5 +182,29 @@ func (u *mediaUseCase) ToggleSubscription(
 
 	res.IsSubscribed = !isExists
 
+	return
+}
+
+func (u *mediaUseCase) GetNewsList(
+	ctx context.Context,
+	p dto.GetNewsListParams,
+) (res dto.GetNewsListResult, err error) {
+	defer func() {
+		if err != nil {
+			var appErr *dto.AppError
+			if !errors.As(err, &appErr) {
+				err = fmt.Errorf("MediaUseCase - GetNewsList: %w", err)
+			}
+		}
+	}()
+
+	r := u.newsRepo()
+
+	res.Items, err = r.GetNewsList(ctx, p)
+	if err != nil {
+		return
+	}
+
+	res.Total, err = r.CountNews(ctx, p.MediaID)
 	return
 }

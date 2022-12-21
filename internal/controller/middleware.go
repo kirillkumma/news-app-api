@@ -57,3 +57,21 @@ func (m *Middleware) AuthedMedia() fiber.Handler {
 		return ctx.Next()
 	}
 }
+
+func (m *Middleware) OptionalAuthedUser() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		userIDStr := ctx.Cookies(userSessionCookie)
+		if userIDStr == "" {
+			return ctx.Next()
+		}
+
+		userID, err := strconv.Atoi(userIDStr)
+		if err != nil {
+			return ctx.Next()
+		}
+
+		ctx.Locals(userIDKey, int64(userID))
+
+		return ctx.Next()
+	}
+}

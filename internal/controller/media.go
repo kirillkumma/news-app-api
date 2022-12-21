@@ -128,6 +128,27 @@ func (c *MediaController) ToggleSubscription() fiber.Handler {
 	}
 }
 
+func (c *MediaController) GetNewsList() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		var p dto.GetNewsListParams
+		if err := ctx.ParamsParser(&p); err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(newErrResponse(err))
+		}
+		if err := ctx.QueryParser(&p); err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(newErrResponse(err))
+		}
+
+		p.UserID, _ = ctx.Locals(userIDKey).(int64)
+
+		res, err := c.mediaUC.GetNewsList(ctx.Context(), p)
+		if err != nil {
+			return err
+		}
+
+		return ctx.Status(fiber.StatusOK).JSON(newResponse(res))
+	}
+}
+
 func (c *MediaController) RegisterRoutes(r fiber.Router, mw *Middleware) {
 	r.Post("register", c.Register())
 	r.Post("login", c.Login())
@@ -135,4 +156,5 @@ func (c *MediaController) RegisterRoutes(r fiber.Router, mw *Middleware) {
 	r.Post("authenticate", mw.AuthedMedia(), c.Authenticate())
 	r.Get("", c.GetMediaList())
 	r.Post(":media_id/toggle-subscription", mw.AuthedUser(), c.ToggleSubscription())
+	r.Get(":media_id/news", mw.OptionalAuthedUser(), c.GetNewsList())
 }

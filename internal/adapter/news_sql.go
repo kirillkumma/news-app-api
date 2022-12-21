@@ -89,7 +89,7 @@ SELECT news.id_news,
        (SELECT COUNT(*) FROM subscription WHERE media_id = media.id_editor),
        news.title,
        news.text_content,
-       TRUE,
+       EXISTS(SELECT 1 FROM favorite WHERE user_id = $1 AND news_id = news.id_news),
        EXTRACT(EPOCH FROM news.release)::BIGINT
 FROM favorite
 INNER JOIN news ON
@@ -104,5 +104,33 @@ LIMIT $2 OFFSET $3
 SELECT COUNT(*)
 FROM favorite
 WHERE user_id = $1
+`
+
+	queryGetNewsList = `
+SELECT news.id_news,
+       media.id_editor,
+       media.num_reg_media_r,
+       media.corp_name,
+       media.email_red,
+       media.editor_name,
+       media.editor_surname,
+       (SELECT COUNT(*) FROM subscription WHERE media_id = $1),
+       news.title,
+       news.text_content,
+       EXISTS(SELECT 1 FROM favorite WHERE user_id = $2 AND news_id = news.id_news),
+       EXTRACT(EPOCH FROM news.release)::BIGINT
+FROM news
+INNER JOIN media ON
+    media.num_reg_media_r = news.num_reg_media_news
+WHERE media.id_editor = $1
+LIMIT $3 OFFSET $4
+`
+
+	queryCountNews = `
+SELECT COUNT(*)
+FROM news
+INNER JOIN media ON 
+    news.num_reg_media_news = media.num_reg_media_r
+WHERE media.id_editor = $1
 `
 )

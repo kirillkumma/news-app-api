@@ -64,7 +64,12 @@ func Run() {
 	}
 
 	userUC := usecase.NewUserUseCase(userRepo)
-	mediaUC := usecase.NewMediaUseCase(mediaRepo)
+	mediaUC := usecase.NewMediaUseCase(
+		mediaRepo,
+		func() adapter.NewsRepository {
+			return adapter.NewNewsRepository(db)
+		},
+	)
 	newsUC := usecase.NewNewsUseCase(
 		func() adapter.NewsRepository {
 			return adapter.NewNewsRepository(db)

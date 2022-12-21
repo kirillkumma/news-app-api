@@ -24,6 +24,8 @@ type (
 		RemoveFromFavorite(ctx context.Context, userID, newsID int64) error
 		GetFavoriteList(ctx context.Context, p dto.GetFavoriteListParams) ([]entity.NewsListItem, error)
 		CountFavorites(ctx context.Context, userID int64) (int64, error)
+		GetNewsList(ctx context.Context, p dto.GetNewsListParams) ([]entity.NewsListItem, error)
+		CountNews(ctx context.Context, mediaID int64) (int64, error)
 	}
 
 	newsRepository struct {
@@ -301,6 +303,62 @@ func (r *newsRepository) CountFavorites(ctx context.Context, userID int64) (v in
 		}
 	}()
 	row := r.q.QueryRow(ctx, queryCountFavorites, userID)
+	err = row.Scan(&v)
+	return
+}
+
+func (r *newsRepository) GetNewsList(
+	ctx context.Context,
+	p dto.GetNewsListParams,
+) (list []entity.NewsListItem, err error) {
+	defer func() {
+		if err != nil {
+			var appErr *dto.AppError
+			if !errors.As(err, &appErr) {
+				err = fmt.Errorf("NewsRepository - GetNewsList: %w", err)
+			}
+		}
+	}()
+	list = make([]entity.NewsListItem, 0, p.Limit.Int64)
+	rows, err := r.q.Query(ctx, queryGetNewsList, p.MediaID, p.UserID, p.Limit, p.Offset)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		item := entity.NewsListItem{}
+		err = rows.Scan(
+			&item.ID,
+			&item.Media.ID,
+			&item.Media.RegistrationNumber,
+			&item.Media.Name,
+			&item.Media.Email,
+			&item.Media.Editor.FirstName,
+			&item.Media.Editor.LastName,
+			&item.Media.SubscriptionCount,
+			&item.Title,
+			&item.Text,
+			&item.IsFavorite,
+			&item.CreatedAt,
+		)
+		if err != nil {
+			return
+		}
+		list = append(list, item)
+	}
+	return
+}
+
+func (r *newsRepository) CountNews(ctx context.Context, mediaID int64) (v int64, err error) {
+	defer func() {
+		if err != nil {
+			var appErr *dto.AppError
+			if !errors.As(err, &appErr) {
+				err = fmt.Errorf("NewsRepository - CountNews: %w", err)
+			}
+		}
+	}()
+	row := r.q.QueryRow(ctx, queryCountNews, mediaID)
 	err = row.Scan(&v)
 	return
 }

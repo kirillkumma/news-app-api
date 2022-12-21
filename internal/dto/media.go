@@ -37,6 +37,18 @@ type (
 	ToggleSubscriptionResult struct {
 		IsSubscribed bool `json:"isSubscribed"`
 	}
+
+	GetNewsListParams struct {
+		MediaID int64 `params:"media_id"`
+		UserID  int64
+		Limit   null.Int `query:"limit"`
+		Offset  null.Int `query:"offset"`
+	}
+
+	GetNewsListResult struct {
+		Total int64                 `json:"total"`
+		Items []entity.NewsListItem `json:"items"`
+	}
 )
 
 func (p *RegisterMediaParams) Validate() error {
