@@ -53,7 +53,7 @@ INNER JOIN media ON
     media.num_reg_media_r = news.num_reg_media_news
 WHERE id_user = $1
   AND ($2::BIGINT IS NULL OR EXTRACT(EPOCH FROM news.release)::BIGINT >= $2::BIGINT)
-ORDER BY news.release
+ORDER BY news.release DESC
 LIMIT $3 OFFSET $4
 `
 
@@ -124,7 +124,7 @@ FROM news
 INNER JOIN media ON
     media.num_reg_media_r = news.num_reg_media_news
 WHERE media.id_editor = $1
-ORDER BY news.release
+ORDER BY news.release DESC
 LIMIT $3 OFFSET $4
 `
 
